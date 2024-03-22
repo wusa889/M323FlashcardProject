@@ -1,3 +1,5 @@
+module.exports = { createNewFlashcard, editFlashcard, sortFlashcards, replaceFlashcard, deleteFlashcard, findFlashcardInArray, getFlashcardIndexById, setFlashcardStatus, resetAllFlashcardStatus, reloadFlashcardArray };
+
 /*
 Creates new Flashcards
 Params:
@@ -27,6 +29,7 @@ function editFlashcard(flashcardArray, flashcard, newQuestion, newAnswere){
     }
     tempFlashcard.Displaytext = tempFlashcard.Question;
     newFlashcard = setFlashcardStatus(tempFlashcard);
+
     return replaceFlashcard(flashcardArray, newFlashcard);
 }
 
@@ -38,7 +41,7 @@ flashcard --> flashcard to be replaced
 */
 function replaceFlashcard(flashcardArray, flashcard){
     let newArray = [...flashcardArray]
-    let index = getFlashcardIndexById(flashcardArray ,flashcard)
+    let index = getFlashcardIndexById(flashcardArray ,flashcard) 
     newArray[index] = flashcard;
     return newArray;
 }
@@ -138,4 +141,15 @@ function resetAllFlashcardStatus(flashcardArray){
     let newArray = [...flashcardArray];
     newArray.forEach(x => x.Status = 0);
     return newArray;
+}
+
+/*
+Used to reload the flashcard Array
+Params:
+flashcardArray --> flashcard Array where the flashcard statuses have to be set
+*/
+function reloadFlashcardArray(flashcardArray){
+    let tempFlashcardArray = [...flashcardArray];
+    let sortedFlashcardArray = sortFlashcards(tempFlashcardArray);
+    return sortedFlashcardArray;
 }
