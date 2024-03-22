@@ -43,10 +43,18 @@ body{
 .answere>p{
     padding: 10px
 }
-.AddButton{
+.add-card-section {
     display: flex;
     justify-content: center;
-    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px; /* Adds some space between the add card section and the cards */
+}
+
+.new-question-input, .new-answer-input {
+    width: 200px; /* Adjust the width as needed */
+    padding: 10px;
+    border: 1px solid #ccc; /* Example border */
+    border-radius: 4px; /* Slightly rounded borders for the input fields */
 }
 
 .button-container {

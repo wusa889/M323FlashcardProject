@@ -17,7 +17,7 @@ const answereStyle = "answere";
 const buttonContainer = "button-container";
 
 // allows using html tags as functions in javascript
-const { div, button, p, h1 } = hh(h);
+const { div, button, p, h1, input } = hh(h);
 
 // A combination of Tailwind classes which represent a (more or less nice) button style
 const btnStyle = "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"; // Standard Blue
@@ -30,40 +30,52 @@ const perfectBtnStyle = "bg-green-500 hover:bg-blue-700 text-white font-bold py-
 const MSGS = {
   TOGGLE_ANSWER: "TOGGLE_ANSWER",
   UPDATE_SCORE: "UPDATE_SCORE",
+  ADD_CARD: "ADD_CARD"
   // ... ℹ️ additional messages
 };
 
 // View function which represents the UI as HTML-tag functions
 function view(dispatch, model) {
-  return div({ className: topContainer }, [
-    div({className: "AddButton"}),
-    div({className: cardArea},[
-    ...model.flashcards.map((flashcard) =>
-      div({ className: cardStyle, key: flashcard.Id }, [
-        div({ className: questionStyle }, [
-          h1({ className: "font-semibold"}, "Question:"),
-          p({}, flashcard.Question),
-          button(
-            { className: btnStyle, onclick: () => dispatch({ type: "TOGGLE_ANSWER", id: flashcard.Id }) },
-            flashcard.Status === 0 ? "Show Answer" : "Hide Answer"
-          ),
-        ]),
-        flashcard.Status === 1
-          ? div({ className: answereStyle }, [
-              h1({ className: "font-semibold"}, "Answere:"),
-              p({}, flashcard.Answere),
-              div({ className: "button-container" }, [
-                button({ onclick: () => dispatch({ type: "UPDATE_SCORE", id: flashcard.Id, score: 1 }), className: badBtnStyle }, "Bad"),
-                button({ onclick: () => dispatch({ type: "UPDATE_SCORE", id: flashcard.Id, score: 2 }), className: goodBtnStyle }, "Good"),
-                button({ onclick: () => dispatch({ type: "UPDATE_SCORE", id: flashcard.Id, score: 3 }), className: perfectBtnStyle }, "Perfect"),
-              ]),
-            ])
-          : null,
-      ])
-    ),
-  ])
+  return div({}, [ // This div wraps the entire view including the add-card-section and the topContainer
+    div({ className: "add-card-section" }, [ // This div is for adding new cards
+      input({ className: 'new-question-input', placeholder: 'Enter question', id: "newQuestion"}),
+      input({ className: 'new-answer-input', placeholder: 'Enter answer',  id: "newAnswere"}),
+      button(
+        { className: btnStyle, onclick: () => dispatch({ type: "ADD_CARD", newQuestion: document.getElementById("newQuestion").value, newAnswer: document.getElementById("newAnswere").value}) },
+        "Add New Card"
+      ),
+    ]),
+    div({ className: topContainer }, [ // This div is the existing topContainer
+      div({className: cardArea},[
+        ...model.flashcards.map((flashcard) =>
+          div({ className: cardStyle, key: flashcard.Id }, [
+            div({ className: questionStyle }, [
+              h1({ className: "font-semibold"}, "Question:"),
+              p({}, flashcard.Question),
+              button(
+                { className: btnStyle, onclick: () => dispatch({ type: "TOGGLE_ANSWER", id: flashcard.Id }) },
+                flashcard.Status === 0 ? "Show Answer" : "Hide Answer"
+              ),
+            ]),
+            flashcard.Status === 1
+              ? div({ className: answereStyle }, [
+                  h1({ className: "font-semibold"}, "Answere:"),
+                  p({}, flashcard.Answere),
+                  div({ className: "button-container" }, [
+                    button({ onclick: () => dispatch({ type: "UPDATE_SCORE", id: flashcard.Id, score: 1 }), className: badBtnStyle }, "Bad"),
+                    button({ onclick: () => dispatch({ type: "UPDATE_SCORE", id: flashcard.Id, score: 2 }), className: goodBtnStyle }, "Good"),
+                    button({ onclick: () => dispatch({ type: "UPDATE_SCORE", id: flashcard.Id, score: 3 }), className: perfectBtnStyle }, "Perfect"),
+                  ]),
+                ])
+              : null,
+          ])
+        ),
+      ]),
+    ]),
   ]);
 }
+
+
 
 // Update function which takes a message and a model and returns a new/updated model
 function update(msg, model) {
@@ -86,6 +98,11 @@ function update(msg, model) {
       });
       flashcardsUpdated = sortFlashcards(flashcardsUpdated);
       return { ...model, flashcards: flashcardsUpdated };
+    case MSGS.ADD_CARD:
+      console.log("now in add card")
+      const newCard = createNewFlashcard(msg.newQuestion, msg.newAnswer, model.flashcards.length + 1);
+      // Add the new card to your array of flashcards
+      return { ...model, flashcards: model.flashcards.concat(newCard), newQuestion: '', newAnswer: '' };
     default:
       return model;
   }
