@@ -11,14 +11,17 @@ function createNewFlashcard(question, answere, id) {
    return newFlashcard = { Question: question, Answere: answere, Score: 0, Id: id, Displaytext: question, Status: 0}
 }
 
-/*
-Used to edit Flashcards
-Params:
-flashcardArray --> Used to get the Array of the flashcards
-flashcard --> flashcard to be modified
-newQuestion --> modifies Qustion of the Flashcard
-newAnswere --> modifies Answere of the Flashcard
-*/
+
+
+
+/**
+ * Used to edit Flashcards
+ * @param {array} flashcardArray Used to get the Array of the flashcards
+ * @param {flashcard} flashcard flashcard to be modified 
+ * @param {string} newQuestion modifies Answere of the Flashcard
+ * @param {string} newAnswere modifies Answere of the Flashcard
+ * @returns Array with new flashcard inside
+ */
 function editFlashcard(flashcardArray, flashcard, newQuestion, newAnswere){
     let tempFlashcard = {...flashcard};
     if(newQuestion !== ""){
