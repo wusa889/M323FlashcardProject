@@ -1,18 +1,25 @@
 module.exports = { createNewFlashcard, editFlashcard, sortFlashcards, replaceFlashcard, deleteFlashcard, findFlashcardInArray, getFlashcardIndexById, setFlashcardStatus, resetAllFlashcardStatus, reloadFlashcardArray };
 
-/*
-Creates new Flashcards
-Params:
-Question --> Sets the Question of the Flashcard
-Answere --> Sets the Answere of the Flashcard
-id --> Sets the id of the flashcard, should be handled by System
-*/
-function createNewFlashcard(question, answere, id) {
-   return newFlashcard = { Question: question, Answere: answere, Score: 0, Id: id, Displaytext: question, Status: 0}
+class flashcard{
+    Question;
+    Answere;
+    Score; 
+    Id; 
+    Displaytext;
+    Status;
 }
 
 
-
+/**
+ * Used to create new flashcards
+ * @param {string} question sets the question of the flashcard
+ * @param {string} answere sets answere of the flashcard
+ * @param {int} id sets the id of the flashcard
+ * @returns A new flashcard
+ */
+function createNewFlashcard(question, answere, id) {
+   return newFlashcard = { Question: question, Answere: answere, Score: 0, Id: id, Displaytext: question, Status: 0}
+}
 
 /**
  * Used to edit Flashcards
@@ -36,12 +43,12 @@ function editFlashcard(flashcardArray, flashcard, newQuestion, newAnswere){
     return replaceFlashcard(flashcardArray, newFlashcard);
 }
 
-/*
-Used to replace a Flashcard in a flashcard Array
-Params:
-flashcardArray --> Used to get the Array of the flashcards
-flashcard --> flashcard to be replaced
-*/
+/**
+ * Helpfunction to replaces a flashcard in an Array
+ * @param {Array} flashcardArray Array where flashcards are stored
+ * @param {flashcard} flashcard  Flashcard to be replaced
+ * @returns New flashcard array with replaced card
+ */
 function replaceFlashcard(flashcardArray, flashcard){
     let newArray = [...flashcardArray]
     let index = getFlashcardIndexById(flashcardArray ,flashcard) 
@@ -49,12 +56,12 @@ function replaceFlashcard(flashcardArray, flashcard){
     return newArray;
 }
 
-/*
-Used to delete a Flashcard in a flashcard Array
-Params:
-flashcardArray --> Used to get the Array of the flashcards
-flashcard --> flashcard to be deleted
-*/
+/**
+ * Deletes a flashcard in a flashcard array
+ * @param {array} flashcardArray 
+ * @param {flashcard} flashcard 
+ * @returns New flashcard array without deleted card
+ */
 function deleteFlashcard(flashcardArray ,flashcard){
     let tempArray = [...flashcardArray];
     let index = getFlashcardIndexById(flashcardArray ,flashcard)
@@ -63,23 +70,23 @@ function deleteFlashcard(flashcardArray ,flashcard){
     return newArray;
 }
 
-/*
-Used to sort a flashcard Array from lowest to highest score
-Params:
-flashcardArray --> Used to get the Array of the flashcards
-*/
+/**
+ * Used to sort a flashcard array
+ * @param {array} flashcardArray Array to be sorted
+ * @returns Sorted flashcard array
+ */
 function sortFlashcards(flashcardArray){
     let newArray = [...flashcardArray]
     newArray.sort((a, b) => a.Score - b.Score)
     return newArray
 }
 
-/*
-Used to set Displaytext of Flashcard to Question or Answere
-Params:
-flashcardArray --> Used to get the Array of the flashcards
-flashcard --> flashcard to be modified
-*/
+/**
+ * Changes the display text of the card
+ * @param {array} flashcardArray Array which holds flashcards
+ * @param {flashcard} flashcard Flashcard where the text has to be set
+ * @returns Flashcard array with flipped card.
+ */
 function changeDisplayText(flashcardArray ,flashcard){
     let turnedFlashCard = {...flashcard}
     let newArray = [...flashcardArray]
@@ -98,32 +105,32 @@ function changeDisplayText(flashcardArray ,flashcard){
     }
 }
 
-/*
-Used to find a Flashcard by id in a Flashcard Array
-Params:
-flashcardArray --> Used to get the Array of the flashcards
-id --> id of the Flashcard to be found
-*/
+/**
+ * Helpfunction to get a flashcard by id
+ * @param {array} flashcardArray Array where the flashcard is stored
+ * @param {int} id Id of the flashcard that has to be found
+ * @returns Flashcard with given id
+ */
 function findFlashcardInArray(flashcardArray, id){
     return flashcardArray.find(flashcard => flashcard.Id === id)
 }
 
-/*
-Used to find the index of a Flashcard in a Flashcard Array
-Params:
-flashcardArray --> Used to get the Array of the flashcards
-flashcard --> flashcard of which the index is to be found
-*/
+/**
+ * Helfunction to find the index of a flashcard in the given array
+ * @param {array} flashcardArray Array where the flashcard is stored
+ * @param {flashcard} flashcard Flashcard of which the index has to be found
+ * @returns Index of the given flashcard
+ */
 function getFlashcardIndexById(flashcardArray, flashcard){
     let index = flashcardArray.findIndex(x => x.Id === flashcard.Id)
     return index;
 }
 
-/*
-Used to Set the status of a flashcard. 0 = Question side / 1 = Answere side 
-Params:
-flashcard --> flashcard of which the status is to be set
-*/
+/**
+ * Used to set the status of a flashcard
+ * @param {flashcard} flashcard Flashcard where the status has to be changed
+ * @returns Flashcard with changed status
+ */
 function setFlashcardStatus(flashcard){
     let newFlashcard = {...flashcard}
     if(newFlashcard.Status === 0){
@@ -135,22 +142,22 @@ function setFlashcardStatus(flashcard){
     return newFlashcard;
 }
 
-/*
-Used to Set the status of all flashcards to 0 (question side). 0 = Question side / 1 = Answere side 
-Params:
-flashcardArray --> flashcard Array where the flashcard statuses have to be set
-*/
+/**
+ * Helpfunction to reset the stored flashcards status to 0
+ * @param {array} flashcardArray Array that holds the flashcards
+ * @returns Flashcard array with reset status of the flashcards
+ */
 function resetAllFlashcardStatus(flashcardArray){ 
     let newArray = [...flashcardArray];
     newArray.forEach(x => x.Status = 0);
     return newArray;
 }
 
-/*
-Used to reload the flashcard Array
-Params:
-flashcardArray --> flashcard Array where the flashcard statuses have to be set
-*/
+/**
+ * Helpfunction to reload and sort a flashcard array
+ * @param {array} flashcardArray 
+ * @returns Sorted flashcard array
+ */
 function reloadFlashcardArray(flashcardArray){
     let tempFlashcardArray = [...flashcardArray];
     let sortedFlashcardArray = sortFlashcards(tempFlashcardArray);
