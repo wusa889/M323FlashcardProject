@@ -1,7 +1,7 @@
 import hh from "hyperscript-helpers";
 import { h, diff, patch } from "virtual-dom";
 import createElement from "virtual-dom/create-element";
-const { createNewFlashcard, editFlashcard, sortFlashcards } = require("./functions.js");
+const { createNewFlashcard, editFlashcard, sortFlashcards, deleteFlashcard } = require("./functions.js");
 
 // const topContainer = "min-h-screen w-auto grid grid-cols-12"
 // const cardArea = "grid col-start-2 col-end-12 grid-cols-[repeat(auto-fill,_minmax(225px,_1fr))] auto-rows-[290px] gap-2 justify-center"
@@ -30,7 +30,8 @@ const perfectBtnStyle = "bg-green-500 hover:bg-blue-700 text-white font-bold py-
 const MSGS = {
   TOGGLE_ANSWER: "TOGGLE_ANSWER",
   UPDATE_SCORE: "UPDATE_SCORE",
-  ADD_CARD: "ADD_CARD"
+  ADD_CARD: "ADD_CARD",
+  DELETE_CARD: "DELETE_CARD"
   // ... ℹ️ additional messages
 };
 
@@ -56,6 +57,7 @@ function view(dispatch, model) {
                 { className: btnStyle, onclick: () => dispatch({ type: "TOGGLE_ANSWER", id: flashcard.Id }) },
                 flashcard.Status === 0 ? "Show Answer" : "Hide Answer"
               ),
+              button({className: btnStyle, onclick: () => dispatch({ type: "DELETE_CARD", flashcard: flashcard })})
             ]),
             flashcard.Status === 1
               ? div({ className: answereStyle }, [
@@ -89,6 +91,7 @@ function update(msg, model) {
         return flashcard;
       });
       return { ...model, flashcards: updatedFlashcards };
+
     case MSGS.UPDATE_SCORE:
       let flashcardsUpdated = model.flashcards.map((flashcard) => {
         if (flashcard.Id === msg.id) {
@@ -98,11 +101,20 @@ function update(msg, model) {
       });
       flashcardsUpdated = sortFlashcards(flashcardsUpdated);
       return { ...model, flashcards: flashcardsUpdated };
+
     case MSGS.ADD_CARD:
       console.log("now in add card")
       const newCard = createNewFlashcard(msg.newQuestion, msg.newAnswer, model.flashcards.length + 1);
       // Add the new card to your array of flashcards
       return { ...model, flashcards: model.flashcards.concat(newCard), newQuestion: '', newAnswer: '' };
+
+    case MSGS.DELETE_CARD:
+      console.log("In delete card")
+      console.log(msg.flashcard)
+      let newFlashcardArray = deleteFlashcard(model.flashcards ,msg.flashcard)
+      return { ...model, flashcards: newFlashcardArray};
+
+
     default:
       return model;
   }

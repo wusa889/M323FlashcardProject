@@ -62,9 +62,9 @@ function replaceFlashcard(flashcardArray, flashcard){
  * @param {flashcard} flashcard 
  * @returns New flashcard array without deleted card
  */
-function deleteFlashcard(flashcardArray ,flashcard){
+function deleteFlashcard(flashcardArray, flashcard){
     let tempArray = [...flashcardArray];
-    let index = getFlashcardIndexById(flashcardArray ,flashcard)
+    let index = getFlashcardIndexById(flashcardArray, flashcard)
     tempArray.splice(index, 1)
     let newArray = sortFlashcards(tempArray)
     return newArray;
