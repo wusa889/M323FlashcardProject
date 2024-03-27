@@ -27,7 +27,7 @@ function createNewFlashcard(question, answere, id) {
  * @param {flashcard} flashcard flashcard to be modified 
  * @param {string} newQuestion modifies Answere of the Flashcard
  * @param {string} newAnswere modifies Answere of the Flashcard
- * @returns Array with new flashcard inside
+ * @returns Array with editted flashcard inside
  */
 function editFlashcard(flashcardArray, flashcard, newQuestion, newAnswere){
     let tempFlashcard = {...flashcard};
@@ -127,7 +127,7 @@ function getFlashcardIndexById(flashcardArray, flashcard){
 }
 
 /**
- * Used to set the status of a flashcard
+ * Used to set the status of a flashcards
  * @param {flashcard} flashcard Flashcard where the status has to be changed
  * @returns Flashcard with changed status
  */

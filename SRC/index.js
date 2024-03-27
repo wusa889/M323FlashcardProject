@@ -3,12 +3,13 @@ import { h, diff, patch } from "virtual-dom";
 import createElement from "virtual-dom/create-element";
 const { createNewFlashcard, editFlashcard, sortFlashcards, deleteFlashcard } = require("./functions.js");
 
+
+//Styles//
 // const topContainer = "min-h-screen w-auto grid grid-cols-12"
 // const cardArea = "grid col-start-2 col-end-12 grid-cols-[repeat(auto-fill,_minmax(225px,_1fr))] auto-rows-[290px] gap-2 justify-center"
 const cardStyle = "bg-[rgb(246,239,165)] flex flex-col overflow-hidden min-h-[400px] grow border-[3px] border-solid border-[black];";
 // const questionStyle = "bg-purple-600 flex flex-col col-span-2 items-center";
 // const answereStyle = "bg-green-500 flex items-center justify-center col-span-2 row-start-2 row-end-3";
-
 const topContainer = "topcontainer";
 const cardArea = "cardArea";
 //const cardStyle = "card";
@@ -16,22 +17,25 @@ const questionStyle = "question";
 const answereStyle = "answere";
 const buttonContainer = "button-container";
 
+//Button Styles//
+const btnStyle = "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"; // Standard Blue
+const badBtnStyle = "bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded";
+const goodBtnStyle = "bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded";
+const perfectBtnStyle = "bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded";
+
+
 // allows using html tags as functions in javascript
 const { div, button, p, h1, input } = hh(h);
-
-// A combination of Tailwind classes which represent a (more or less nice) button style
-const btnStyle = "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"; // Standard Blue
-const badBtnStyle = "bg-red-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded";
-const goodBtnStyle = "bg-yellow-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded";
-const perfectBtnStyle = "bg-green-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded";
-
 
 // Messages which can be used to update the model
 const MSGS = {
   TOGGLE_ANSWER: "TOGGLE_ANSWER",
   UPDATE_SCORE: "UPDATE_SCORE",
   ADD_CARD: "ADD_CARD",
-  DELETE_CARD: "DELETE_CARD"
+  DELETE_CARD: "DELETE_CARD",
+  TOGGLE_EDIT: "TOGGLE_EDIT",
+  EDIT_CARD: "EDIT_CARD",
+  CANCEL: "CANCEL"
   // ... ℹ️ additional messages
 };
 
@@ -57,7 +61,11 @@ function view(dispatch, model) {
                 { className: btnStyle, onclick: () => dispatch({ type: "TOGGLE_ANSWER", id: flashcard.Id }) },
                 flashcard.Status === 0 ? "Show Answer" : "Hide Answer"
               ),
-              button({className: btnStyle, onclick: () => dispatch({ type: "DELETE_CARD", flashcard: flashcard })})
+              button(
+                { className: goodBtnStyle + " ml-12", onclick: () => dispatch({ type: "TOGGLE_EDIT", id: flashcard.Id }) },
+                "Edit Card"
+              ),
+              button({className: badBtnStyle + " ml-2", onclick: () => dispatch({ type: "DELETE_CARD", flashcard: flashcard }) }, "Delete")
             ]),
             flashcard.Status === 1
               ? div({ className: answereStyle }, [
@@ -67,6 +75,17 @@ function view(dispatch, model) {
                     button({ onclick: () => dispatch({ type: "UPDATE_SCORE", id: flashcard.Id, score: 1 }), className: badBtnStyle }, "Bad"),
                     button({ onclick: () => dispatch({ type: "UPDATE_SCORE", id: flashcard.Id, score: 2 }), className: goodBtnStyle }, "Good"),
                     button({ onclick: () => dispatch({ type: "UPDATE_SCORE", id: flashcard.Id, score: 3 }), className: perfectBtnStyle }, "Perfect"),
+                  ]),
+                ])
+              : null,
+              flashcard.Status === 2
+              ? div({ className: answereStyle }, [
+                  h1({ className: "font-semibold"}, "Edit:"),
+                  input({ className: 'w-[375px] border rounded p-2.5 border-solid border-[#ccc] mb-1', placeholder: 'Enter question', id: "editQuestion"}),
+                  input({ className: 'w-[375px] border rounded p-2.5 border-solid border-[#ccc] mb-2', placeholder: 'Enter answer',  id: "editAnswere"}),
+                  div({ className: "button-container" }, [
+                    button({ onclick: () => dispatch({ type: "EDIT_CARD", flashcard: flashcard, editQuestion: document.getElementById("editQuestion").value, editAnswere: document.getElementById("editAnswere").value }), className: perfectBtnStyle }, "Update"),
+                    button({ onclick: () => dispatch({ type: "CANCEL", id: flashcard.Id }), className: goodBtnStyle }, "Cancel"),
                   ]),
                 ])
               : null,
@@ -83,7 +102,7 @@ function view(dispatch, model) {
 function update(msg, model) {
   console.log("Action received:", msg); // Debug log
   switch (msg.type) {
-    case "TOGGLE_ANSWER":
+    case  MSGS.TOGGLE_ANSWER:
       const updatedFlashcards = model.flashcards.map((flashcard) => {
         if (flashcard.Id === msg.id) {
           return { ...flashcard, Status: flashcard.Status === 0 ? 1 : 0 };
@@ -91,22 +110,48 @@ function update(msg, model) {
         return flashcard;
       });
       return { ...model, flashcards: updatedFlashcards };
+    
+    case  MSGS.TOGGLE_EDIT:
+        const toggledFlashcards = model.flashcards.map((flashcard) => {
+          if (flashcard.Id === msg.id) {
+            return { ...flashcard, Status: flashcard.Status === 0 ? 2 : 0 };
+          }
+          return flashcard;
+        });
+        return { ...model, flashcards: toggledFlashcards };
 
     case MSGS.UPDATE_SCORE:
       let flashcardsUpdated = model.flashcards.map((flashcard) => {
         if (flashcard.Id === msg.id) {
-          return { ...flashcard, Score: msg.score, Status: 0 }; // Reset Status to hide the answer again
+          return { ...flashcard, Score: flashcard.Score + msg.score, Status: 0 }; // Reset Status to hide the answer again
         }
         return flashcard;
       });
       flashcardsUpdated = sortFlashcards(flashcardsUpdated);
       return { ...model, flashcards: flashcardsUpdated };
 
+    case MSGS.CANCEL:
+      let flashcardsCancel = model.flashcards.map((flashcard) => {
+        if (flashcard.Id === msg.id) {
+          return { ...flashcard, Status: 0 }; // Reset Status to hide the answer again
+        }
+        return flashcard;
+      });
+      flashcardsCancel = sortFlashcards(flashcardsCancel);
+      return { ...model, flashcards: flashcardsCancel };
+
     case MSGS.ADD_CARD:
       console.log("now in add card")
       const newCard = createNewFlashcard(msg.newQuestion, msg.newAnswer, model.flashcards.length + 1);
       // Add the new card to your array of flashcards
       return { ...model, flashcards: model.flashcards.concat(newCard), newQuestion: '', newAnswer: '' };
+
+      case MSGS.EDIT_CARD:
+        console.log("now in edit card")
+        const editCard = editFlashcard(model.flashcards, msg.flashcard, msg.editQuestion, msg.editAnswere)
+        console.log(editCard)
+        // Add the new card to your array of flashcards
+        return { ...model, flashcards: editCard };
 
     case MSGS.DELETE_CARD:
       console.log("In delete card")
