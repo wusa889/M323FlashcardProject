@@ -5,29 +5,28 @@ const { createNewFlashcard, editFlashcard, sortFlashcards, deleteFlashcard } = r
 
 
 //Styles//
-// const topContainer = "min-h-screen w-auto grid grid-cols-12"
-// const cardArea = "grid col-start-2 col-end-12 grid-cols-[repeat(auto-fill,_minmax(225px,_1fr))] auto-rows-[290px] gap-2 justify-center"
 const cardStyle = "bg-[rgb(246,239,165)] flex flex-col overflow-hidden min-h-[400px] grow border-[3px] border-solid border-[black];";
-// const questionStyle = "bg-purple-600 flex flex-col col-span-2 items-center";
-// const answereStyle = "bg-green-500 flex items-center justify-center col-span-2 row-start-2 row-end-3";
-const topContainer = "topcontainer";
-const cardArea = "cardArea";
-//const cardStyle = "card";
-const questionStyle = "question";
-const answereStyle = "answere";
-const buttonContainer = "button-container";
+const questionStyle = "p-5";
+const answereStyle = "pt-0 p-5";
+const qnaStyle = "p-2.5"
+const inputStyle = "w-[375px] border rounded p-2.5 border-solid border-[#ccc]";
+
+//Containers//
+const buttonContainer = "flex justify-around gap-2.5 mt-auto";
+const cardArea = "col-[2_/_12] grid grid-cols-[repeat(auto-fill,minmax(400px,1fr))] auto-rows-min gap-1 justify-center items-start mt-2"
+const topContainer = "min-h-[80vh] grid grid-cols-12";
+const addCardContainer = "flex justify-center gap-2.5";
 
 //Button Styles//
-const btnStyle = "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"; // Standard Blue
+const btnStyle = "bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded";
 const badBtnStyle = "bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded";
 const goodBtnStyle = "bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded";
 const perfectBtnStyle = "bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded";
 
-
-// allows using html tags as functions in javascript
+// used html tags
 const { div, button, p, h1, input } = hh(h);
 
-// Messages which can be used to update the model
+// Flow messages
 const MSGS = {
   TOGGLE_ANSWER: "TOGGLE_ANSWER",
   UPDATE_SCORE: "UPDATE_SCORE",
@@ -36,15 +35,14 @@ const MSGS = {
   TOGGLE_EDIT: "TOGGLE_EDIT",
   EDIT_CARD: "EDIT_CARD",
   CANCEL: "CANCEL"
-  // ... ℹ️ additional messages
 };
 
 // View function which represents the UI as HTML-tag functions
 function view(dispatch, model) {
   return div({}, [ // This div wraps the entire view including the add-card-section and the topContainer
-    div({ className: "add-card-section" }, [ // This div is for adding new cards
-      input({ className: 'new-question-input', placeholder: 'Enter question', id: "newQuestion"}),
-      input({ className: 'new-answer-input', placeholder: 'Enter answer',  id: "newAnswere"}),
+    div({ className: addCardContainer }, [ // This div is for adding new cards
+      input({ className: inputStyle, placeholder: 'Enter question', id: "newQuestion"}),
+      input({ className: inputStyle, placeholder: 'Enter answer',  id: "newAnswere"}),
       button(
         { className: btnStyle, onclick: () => dispatch({ type: "ADD_CARD", newQuestion: document.getElementById("newQuestion").value, newAnswer: document.getElementById("newAnswere").value}) },
         "Add New Card"
@@ -56,7 +54,7 @@ function view(dispatch, model) {
           div({ className: cardStyle, key: flashcard.Id }, [
             div({ className: questionStyle }, [
               h1({ className: "font-semibold"}, "Question:"),
-              p({}, flashcard.Question),
+              p({ className: qnaStyle }, flashcard.Question),
               button(
                 { className: btnStyle, onclick: () => dispatch({ type: "TOGGLE_ANSWER", id: flashcard.Id }) },
                 flashcard.Status === 0 ? "Show Answer" : "Hide Answer"
@@ -70,8 +68,8 @@ function view(dispatch, model) {
             flashcard.Status === 1
               ? div({ className: answereStyle }, [
                   h1({ className: "font-semibold"}, "Answere:"),
-                  p({}, flashcard.Answere),
-                  div({ className: "button-container" }, [
+                  p({ className: qnaStyle}, flashcard.Answere),
+                  div({ className: buttonContainer }, [
                     button({ onclick: () => dispatch({ type: "UPDATE_SCORE", id: flashcard.Id, score: 1 }), className: badBtnStyle }, "Bad"),
                     button({ onclick: () => dispatch({ type: "UPDATE_SCORE", id: flashcard.Id, score: 2 }), className: goodBtnStyle }, "Good"),
                     button({ onclick: () => dispatch({ type: "UPDATE_SCORE", id: flashcard.Id, score: 3 }), className: perfectBtnStyle }, "Perfect"),
@@ -81,9 +79,9 @@ function view(dispatch, model) {
               flashcard.Status === 2
               ? div({ className: answereStyle }, [
                   h1({ className: "font-semibold"}, "Edit:"),
-                  input({ className: 'w-[375px] border rounded p-2.5 border-solid border-[#ccc] mb-1', placeholder: 'Enter question', id: "editQuestion"}),
-                  input({ className: 'w-[375px] border rounded p-2.5 border-solid border-[#ccc] mb-2', placeholder: 'Enter answer',  id: "editAnswere"}),
-                  div({ className: "button-container" }, [
+                  input({ className: inputStyle + " mb-1", placeholder: 'Enter question', id: "editQuestion"}),
+                  input({ className: inputStyle + " mb-2", placeholder: 'Enter answer',  id: "editAnswere"}),
+                  div({ className: buttonContainer }, [
                     button({ onclick: () => dispatch({ type: "EDIT_CARD", flashcard: flashcard, editQuestion: document.getElementById("editQuestion").value, editAnswere: document.getElementById("editAnswere").value }), className: perfectBtnStyle }, "Update"),
                     button({ onclick: () => dispatch({ type: "CANCEL", id: flashcard.Id }), className: goodBtnStyle }, "Cancel"),
                   ]),
