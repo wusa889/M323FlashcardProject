@@ -142,6 +142,11 @@ function update(msg, model) {
 
     case MSGS.ADD_CARD:
       console.log("now in add card")
+      if (msg.newQuestion === "" || msg.newAnswer === "")
+      {
+        alert("Please provide a qustion and an answere")
+        return {...model};
+      }
       const newCard = createNewFlashcard(msg.newQuestion, msg.newAnswer, model.flashcards.length + 1);
       // Add the new card to your array of flashcards
       return { ...model, flashcards: model.flashcards.concat(newCard), newQuestion: '', newAnswer: '' };
@@ -150,6 +155,11 @@ function update(msg, model) {
         console.log("now in edit card")
         const editCard = editFlashcard(model.flashcards, msg.flashcard, msg.editQuestion, msg.editAnswere)
         console.log(editCard)
+        if (msg.editQuestion === "" || msg.editAnswere === "")
+      {
+        alert("Please provide a qustion and an answere")
+        return {...model};
+      }
         // Add the new card to your array of flashcards
         return { ...model, flashcards: editCard };
 
