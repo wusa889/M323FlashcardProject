@@ -1,6 +1,5 @@
 const hh = require("hyperscript-helpers");
-const { h, diff, patch } = require("virtual-dom");
-const createElement = require("virtual-dom/create-element");
+const { h } = require("virtual-dom");
 const { div, button, p, h1, input } = hh(h);
 
 //Styles//
@@ -23,8 +22,8 @@ const goodBtnStyle = "bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-
 const perfectBtnStyle = "bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded";
 
 function view(dispatch, model) {
-    return div({}, [ // This div wraps the entire view including the add-card-section and the topContainer
-      div({ className: addCardContainer }, [ // This div is for adding new cards
+    return div({}, [
+      div({ className: addCardContainer }, [
         input({ className: inputStyle, placeholder: 'Enter question', id: "newQuestion"}),
         input({ className: inputStyle, placeholder: 'Enter answer',  id: "newAnswere"}),
         button(
@@ -32,24 +31,33 @@ function view(dispatch, model) {
           "Add New Card"
         ),
       ]),
-      div({ className: topContainer }, [ // This div is the existing topContainer
+      div({ className: topContainer }, [
         div({className: cardArea},[
           ...model.flashcards.map((flashcard) =>
             div({ className: cardStyle, key: flashcard.Id }, [
-              div({ className: questionStyle }, [
-                h1({ className: "font-semibold"}, "Question:"),
-                p({ className: qnaStyle }, flashcard.Question),
-                button(
-                  { className: btnStyle, onclick: () => dispatch({ type: "TOGGLE_ANSWER", id: flashcard.Id }) },
-                  flashcard.Status === 0 ? "Show Answer" : "Hide Answer"
-                ),
-                button(
-                  { className: goodBtnStyle + " ml-12", onclick: () => dispatch({ type: "TOGGLE_EDIT", id: flashcard.Id }) },
-                  "Edit Card"
-                ),
-                button({className: badBtnStyle + " ml-2", onclick: () => dispatch({ type: "DELETE_CARD", flashcard: flashcard }) }, "Delete")
-              ]),
-              flashcard.Status === 1
+                div({ className: questionStyle }, [
+                    h1({ className: "font-semibold"}, "Question:"),
+                    p({ className: qnaStyle }, flashcard.Question),
+                    div({ className: buttonContainer }, [
+                        div({ className: 'w-1/2' }, [
+                            button(
+                                { className: btnStyle, onclick: () => dispatch({ type: "TOGGLE_ANSWER", id: flashcard.Id }) },
+                                flashcard.Status === 1 ? "Hide Answer" : "Show Answer"
+                            ),
+                        ]),
+                        div({ className: 'w-1/2 flex flex-col items-end' }, [
+                            button(
+                                { className: goodBtnStyle, onclick: () => dispatch({ type: "TOGGLE_EDIT", id: flashcard.Id }) },
+                                "Edit Card"
+                            ),
+                            button(
+                                { className: badBtnStyle + " mt-2", onclick: () => dispatch({ type: "DELETE_CARD", flashcard: flashcard }) },
+                                "Delete"
+                            ),
+                        ]),
+                    ]),
+                ]),
+                flashcard.Status === 1
                 ? div({ className: answereStyle }, [
                     h1({ className: "font-semibold"}, "Answere:"),
                     p({ className: qnaStyle}, flashcard.Answere),
