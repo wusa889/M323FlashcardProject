@@ -8,7 +8,6 @@ const flashcard4 = createNewFlashcard("q4", "a4", 4)
 
 // Test array
 let flashcardArray = [flashcard1, flashcard2, flashcard3, flashcard4];
-console.log(flashcardArray)
 
 
 // Creating flashcard test

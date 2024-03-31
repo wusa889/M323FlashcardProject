@@ -11,7 +11,9 @@ const MSGS = {
 };
 
 function update(msg, model) {
+  console.log(msg)
   switch (msg.type) {
+    
     case MSGS.TOGGLE_ANSWER:
       const updatedFlashcards = model.flashcards.map((flashcard) => {
         if (flashcard.Id === msg.id) {
@@ -72,7 +74,7 @@ function update(msg, model) {
     case MSGS.DELETE_CARD:
       console.log("In delete card");
       console.log(msg.flashcard);
-      if (confirm("Bist du ein Penner?")) {
+      if (confirm("Do you really want to delete this card?")) {
         let newFlashcardArray = deleteFlashcard(model.flashcards, msg.flashcard);
         return { ...model, flashcards: newFlashcardArray };
       } else {
