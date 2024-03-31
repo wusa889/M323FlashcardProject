@@ -164,10 +164,15 @@ function update(msg, model) {
     case MSGS.DELETE_CARD:
       console.log("In delete card")
       console.log(msg.flashcard)
-      let newFlashcardArray = deleteFlashcard(model.flashcards ,msg.flashcard)
-      return { ...model, flashcards: newFlashcardArray};
-
-
+      if(confirm("Bist du ein Penner?")){
+        let newFlashcardArray = deleteFlashcard(model.flashcards ,msg.flashcard)
+        return { ...model, flashcards: newFlashcardArray};
+      }
+      else{
+        let retmod = {...model}
+        return(retmod)
+      }
+      
     default:
       return model;
   }
