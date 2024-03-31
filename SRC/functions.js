@@ -9,7 +9,6 @@ class flashcard{
     Status;
 }
 
-
 /**
  * Used to create new flashcards
  * @param {string} question sets the question of the flashcard
@@ -81,29 +80,6 @@ function sortFlashcards(flashcardArray){
     return newArray
 }
 
-/**
- * Changes the display text of the card
- * @param {array} flashcardArray Array which holds flashcards
- * @param {flashcard} flashcard Flashcard where the text has to be set
- * @returns Flashcard array with flipped card.
- */
-function changeDisplayText(flashcardArray ,flashcard){
-    let turnedFlashCard = {...flashcard}
-    let newArray = [...flashcardArray]
-    let index = getFlashcardIndexById(flashcardArray ,flashcard)
-    if(turnedFlashCard.Displaytext === turnedFlashCard.Question)
-    {
-        turnedFlashCard.Displaytext = turnedFlashCard.Answere;
-        newArray[index] = turnedFlashCard
-        return newArray;
-    }
-    else
-    {
-        turnedFlashCard.Displaytext = turnedFlashCard.Question;
-        newArray[index] = turnedFlashCard
-        return newArray;
-    }
-}
 
 /**
  * Helpfunction to get a flashcard by id
@@ -137,7 +113,7 @@ function setFlashcardStatus(flashcard){
         newFlashcard.Status = 1
     }
     else{
-        newFlashcard.Status = 0
+       newFlashcard.Status = 0
     }
     return newFlashcard;
 }
