@@ -1,11 +1,10 @@
-module.exports = { createNewFlashcard, editFlashcard, sortFlashcards, replaceFlashcard, deleteFlashcard, findFlashcardInArray, getFlashcardIndexById, setFlashcardStatus, resetAllFlashcardStatus, reloadFlashcardArray };
+module.exports = { createNewFlashcard, editFlashcard, sortFlashcards, replaceFlashcard, deleteFlashcard, getFlashcardIndexById, setFlashcardStatus };
 
 class flashcard{
     Question;
     Answere;
     Score; 
     Id; 
-    Displaytext;
     Status;
 }
 
@@ -17,7 +16,7 @@ class flashcard{
  * @returns A new flashcard
  */
 function createNewFlashcard(question, answere, id) {
-   return newFlashcard = { Question: question, Answere: answere, Score: 0, Id: id, Displaytext: question, Status: 0}
+   return newFlashcard = { Question: question, Answere: answere, Score: 0, Id: id, Status: 0}
 }
 
 /**
@@ -36,7 +35,6 @@ function editFlashcard(flashcardArray, flashcard, newQuestion, newAnswere){
     if(newAnswere !== ""){
         tempFlashcard.Answere = newAnswere;
     }
-    tempFlashcard.Displaytext = tempFlashcard.Question;
     newFlashcard = setFlashcardStatus(tempFlashcard);
 
     return replaceFlashcard(flashcardArray, newFlashcard);
@@ -80,17 +78,6 @@ function sortFlashcards(flashcardArray){
     return newArray
 }
 
-
-/**
- * Helpfunction to get a flashcard by id
- * @param {array} flashcardArray Array where the flashcard is stored
- * @param {int} id Id of the flashcard that has to be found
- * @returns Flashcard with given id
- */
-function findFlashcardInArray(flashcardArray, id){
-    return flashcardArray.find(flashcard => flashcard.Id === id)
-}
-
 /**
  * Helfunction to find the index of a flashcard in the given array
  * @param {array} flashcardArray Array where the flashcard is stored
@@ -116,26 +103,4 @@ function setFlashcardStatus(flashcard){
        newFlashcard.Status = 0
     }
     return newFlashcard;
-}
-
-/**
- * Helpfunction to reset the stored flashcards status to 0
- * @param {array} flashcardArray Array that holds the flashcards
- * @returns Flashcard array with reset status of the flashcards
- */
-function resetAllFlashcardStatus(flashcardArray){ 
-    let newArray = [...flashcardArray];
-    newArray.forEach(x => x.Status = 0);
-    return newArray;
-}
-
-/**
- * Helpfunction to reload and sort a flashcard array
- * @param {array} flashcardArray 
- * @returns Sorted flashcard array
- */
-function reloadFlashcardArray(flashcardArray){
-    let tempFlashcardArray = [...flashcardArray];
-    let sortedFlashcardArray = sortFlashcards(tempFlashcardArray);
-    return sortedFlashcardArray;
 }

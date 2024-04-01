@@ -70,10 +70,10 @@ test('Add a card with empty question', () => {
 });
 
 test('Edit a card', () => {
-    let newModel = update({ type: "EDIT_CARD",flashcard: model.flashcards[0], editQuestion: "editAnswere", editAnswere: "editAnswere" }, model);
+    let newModel = update({ type: "EDIT_CARD",flashcard: model.flashcards[0], editQuestion: "editQuestion", editAnswere: "editAnswere" }, model);
 
     expect(newModel.flashcards[0].Id).toBe(1);
-    expect(newModel.flashcards[0].Question).toBe("editAnswere");
+    expect(newModel.flashcards[0].Question).toBe("editQuestion");
     expect(newModel.flashcards[0].Answere).toBe("editAnswere");
 });
 
@@ -84,13 +84,23 @@ test('Edit a card with empty question', () => {
 
     expect(newModel.flashcards[0].Id).toBe(1);
     expect(newModel.flashcards[0].Question).toBe("q1");
-    expect(newModel.flashcards[0].Answere).toBe("a1");
+    expect(newModel.flashcards[0].Answere).toBe("editAnswere");
 });
 
 test('Edit a card with empty answere', () => {
     alert = jest.fn();
 
-    let newModel = update({ type: "EDIT_CARD", flashcard: model.flashcards[0], editQuestion: "editAnswere", editAnswere: "" }, model);
+    let newModel = update({ type: "EDIT_CARD", flashcard: model.flashcards[0], editQuestion: "editQuestion", editAnswere: "" }, model);
+
+    expect(newModel.flashcards[0].Id).toBe(1);
+    expect(newModel.flashcards[0].Question).toBe("editQuestion");
+    expect(newModel.flashcards[0].Answere).toBe("a1");
+});
+
+test('Edit a card with empty question and answere', () => {
+    alert = jest.fn();
+
+    let newModel = update({ type: "EDIT_CARD", flashcard: model.flashcards[0], editQuestion: "", editAnswere: "" }, model);
 
     expect(newModel.flashcards[0].Id).toBe(1);
     expect(newModel.flashcards[0].Question).toBe("q1");

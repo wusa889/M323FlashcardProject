@@ -65,8 +65,8 @@ function update(msg, model) {
       console.log("now in edit card");
       const editCard = editFlashcard(model.flashcards, msg.flashcard, msg.editQuestion, msg.editAnswere);
       console.log(editCard);
-      if (msg.editQuestion === "" || msg.editAnswere === "") {
-        alert("Please provide a qustion and an answere");
+      if (msg.editQuestion === "" && msg.editAnswere === "") {
+        alert("Please provide a qustion or an answere");
         return { ...model };
       }
       return { ...model, flashcards: editCard };

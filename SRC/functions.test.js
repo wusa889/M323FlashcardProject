@@ -1,4 +1,4 @@
-const {createNewFlashcard, editFlashcard, sortFlashcards, deleteFlashcard, findFlashcardInArray, getFlashcardIndexById, setFlashcardStatus, resetAllFlashcardStatus, reloadFlashcardArray} = require('./functions.js')
+const { createNewFlashcard, editFlashcard, sortFlashcards, deleteFlashcard, getFlashcardIndexById, setFlashcardStatus } = require('./functions.js')
 
 // Test card
 const flashcard1 = createNewFlashcard("q1", "a1", 1)
@@ -56,15 +56,6 @@ test('Sorting the flashcardarray', () =>{
     expect(sortArray[3].Id).toBe(1);
 })
 
-// Find a Flashcard
-test('Find a flashcard in an array', () => {
-    let newArray = [...flashcardArray];
-    let returncard = findFlashcardInArray(newArray, 1);
-    expect(returncard.Id).toBe(1)
-    expect(returncard.Question).toBe("q1")
-    expect(returncard.Answere).toBe("a1")
-})
-
 // Set Flashcard Status
 test('Set Flashcard Status', () => {
     let newArray = [...flashcardArray];
@@ -75,18 +66,6 @@ test('Set Flashcard Status', () => {
     expect(testCard2.Status).toBe(0)
 })
 
-// Reset all Flashcard Status
-test('Reset all status of flashcard', () => {
-    let newArray = [...flashcardArray];
-    newArray[0].Status = 5
-    newArray[1].Status = 4
-    newArray[2].Status = 3
-    let testArray = resetAllFlashcardStatus(newArray)
-    expect(testArray[0].Status).toBe(0)
-    expect(testArray[1].Status).toBe(0)
-    expect(testArray[2].Status).toBe(0)
-})
-
 // Get index of flashcard
 test('Gets a flashcard index by id', () => {
     let newArray = [...flashcardArray];
@@ -94,12 +73,4 @@ test('Gets a flashcard index by id', () => {
     let index2 = getFlashcardIndexById(newArray, flashcard2)
     expect(index1).toBe(0)
     expect(index2).toBe(1)
-})
-
-// Reload flashcard array
-test('Set Flashcard Status', () => {
-    let newArray = [...flashcardArray];
-    newArray[0].Score = 5;
-    let testArray = reloadFlashcardArray(newArray);
-    expect(testArray[3].Id).toBe(1)
 })
