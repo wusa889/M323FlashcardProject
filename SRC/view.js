@@ -71,10 +71,10 @@ function view(dispatch, model) {
                 flashcard.Status === 2
                 ? div({ className: answereStyle }, [
                     h1({ className: "font-semibold"}, "Edit:"),
-                    input({ className: inputStyle + " mb-1", placeholder: 'Enter question', id: "editQuestion"}),
-                    input({ className: inputStyle + " mb-2", placeholder: 'Enter answer',  id: "editAnswere"}),
+                    input({ className: inputStyle + " mb-1", placeholder: 'Enter question', id: `editQuestion${flashcard.id}`}),
+                    input({ className: inputStyle + " mb-2", placeholder: 'Enter answer',  id: `editAnswere${flashcard.id}`}),
                     div({ className: buttonContainer }, [
-                      button({ onclick: () => dispatch({ type: "EDIT_CARD", flashcard: flashcard, editQuestion: document.getElementById("editQuestion").value, editAnswere: document.getElementById("editAnswere").value }), className: perfectBtnStyle }, "Update"),
+                      button({ onclick: () => dispatch({ type: "EDIT_CARD", flashcard: flashcard, editQuestion: document.getElementById(`editQuestion${flashcard.id}`).value, editAnswere: document.getElementById(`editAnswere${flashcard.id}`).value }), className: perfectBtnStyle }, "Update"),
                       button({ onclick: () => dispatch({ type: "CANCEL", id: flashcard.Id }), className: goodBtnStyle }, "Cancel"),
                     ]),
                   ])

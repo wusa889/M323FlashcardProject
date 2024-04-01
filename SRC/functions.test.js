@@ -66,7 +66,7 @@ test('Set Flashcard Status', () => {
     expect(testCard2.Status).toBe(0)
 })
 
-// Get index of flashcard
+// Get index of a flashcard
 test('Gets a flashcard index by id', () => {
     let newArray = [...flashcardArray];
     let index1 = getFlashcardIndexById(newArray, flashcard1)

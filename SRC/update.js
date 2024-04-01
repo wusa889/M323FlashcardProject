@@ -11,7 +11,6 @@ const MSGS = {
 };
 
 function update(msg, model) {
-  console.log(msg)
   switch (msg.type) {
     
     case MSGS.TOGGLE_ANSWER:
@@ -53,7 +52,6 @@ function update(msg, model) {
       return { ...model, flashcards: flashcardsCancel };
 
     case MSGS.ADD_CARD:
-      console.log("now in add card");
       if (msg.newQuestion === "" || msg.newAnswer === "") {
         alert("Please provide a qustion and an answere");
         return { ...model };
@@ -62,9 +60,7 @@ function update(msg, model) {
       return { ...model, flashcards: model.flashcards.concat(newCard), newQuestion: "", newAnswer: "" };
 
     case MSGS.EDIT_CARD:
-      console.log("now in edit card");
       const editCard = editFlashcard(model.flashcards, msg.flashcard, msg.editQuestion, msg.editAnswere);
-      console.log(editCard);
       if (msg.editQuestion === "" && msg.editAnswere === "") {
         alert("Please provide a qustion or an answere");
         return { ...model };
@@ -72,8 +68,6 @@ function update(msg, model) {
       return { ...model, flashcards: editCard };
 
     case MSGS.DELETE_CARD:
-      console.log("In delete card");
-      console.log(msg.flashcard);
       if (confirm("Do you really want to delete this card?")) {
         let newFlashcardArray = deleteFlashcard(model.flashcards, msg.flashcard);
         return { ...model, flashcards: newFlashcardArray };
