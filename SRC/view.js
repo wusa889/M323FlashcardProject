@@ -62,9 +62,9 @@ function view(dispatch, model) {
                     h1({ className: "font-semibold"}, "Answere:"),
                     p({ className: qnaStyle}, flashcard.Answere),
                     div({ className: buttonContainer }, [
-                      button({ onclick: () => dispatch({ type: "UPDATE_SCORE", id: flashcard.Id, score: 1 }), className: badBtnStyle }, "Bad"),
-                      button({ onclick: () => dispatch({ type: "UPDATE_SCORE", id: flashcard.Id, score: 2 }), className: goodBtnStyle }, "Good"),
-                      button({ onclick: () => dispatch({ type: "UPDATE_SCORE", id: flashcard.Id, score: 3 }), className: perfectBtnStyle }, "Perfect"),
+                      button({ onclick: () => dispatch({ type: "UPDATE_SCORE", id: flashcard.Id, score: 0 }), className: badBtnStyle }, "Bad"),
+                      button({ onclick: () => dispatch({ type: "UPDATE_SCORE", id: flashcard.Id, score: 1 }), className: goodBtnStyle }, "Good"),
+                      button({ onclick: () => dispatch({ type: "UPDATE_SCORE", id: flashcard.Id, score: 2 }), className: perfectBtnStyle }, "Perfect"),
                     ]),
                   ])
                 : null,
